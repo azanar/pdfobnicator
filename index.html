@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Drive API Quickstart</title>
+        <meta charset="utf-8" />
+        <script defer src="https://zeptojs.com/zepto.min.js"></script>
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+        <script defer src="https://apis.google.com/js/api.js"></script>
+        <script defer src="https://accounts.google.com/gsi/client"></script>
+        <script defer src="page.mjs" type="module"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <p>Drive API Quickstart</p>
+
+        <!--Add buttons to initiate auth sequence and sign out-->
+        <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+        <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+
+        <pre id="content" style="white-space: pre-wrap;"></pre>
+
+        <div id="file">
+            <p>Pick a local file!</p>
+            <input type="file" id="file-selector" accept="application/pdf">
+            <input type="button" id="file-selector-go" value="Go!">
+        </div>
+
+        <div id="gdrive">
+            <p>Pick a file in your drive!</p>
+            <input type="text" id="google-drive-id">
+            <input type="button" id="google-drive-go" value="Go!">
+        </div>
+
+        <ul id="canvases">
+        </ul>
+    </body>
+</html>
