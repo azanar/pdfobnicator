@@ -1,0 +1,44 @@
+{
+    "name": "pdfobnicator",
+    "version": "0.0.1",
+    "description": "Pure Client-Side PDF splitter/merger",
+    "private": true,
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@gitlab.com/azanar/pdfobnicator.git"
+    },
+    "author": "",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://gitlab.com/azanar/pdfobnicator/issues"
+    },
+    "homepage": "https://gitlab.com/azanar/pdfobnicator#readme",
+    "dependencies": {
+        "inferno": "*",
+        "path-browserify": "*",
+        "pdf-lib": "*",
+        "pdfjs-dist": "*",
+        "vm-browserify": "*"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7",
+        "@babel/core": "^7",
+        "@babel/preset-env": "^7",
+        "@webpack-cli/generators": "^2.5.0",
+        "babel-loader": "^8.2.5",
+        "babel-plugin-inferno": "^6.5.0",
+        "babel-plugin-syntax-jsx": "^6.18.0",
+        "coffee-loader": "*",
+        "imports-loader": "^4.0.0",
+        "webpack": "^5.73.0",
+        "webpack-cli": "^4.10.0"
+    },
+    "browser": {
+        "fs": false,
+        "path": false,
+        "os": false
+    }
+}
