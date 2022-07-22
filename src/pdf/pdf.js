@@ -1,5 +1,59 @@
 import { PDFDocument } from 'pdf-lib'
-import { getDocument as getPdfJsDocument } from 'pdfjs-dist'
+import PdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+import { getDocument as getPdfJsDocument, GlobalWorkerOptions } from 'pdfjs-dist'
+
+GlobalWorkerOptions.workerSrc = PdfjsWorker;
+
+export class ScaledPageViewer {
+    constructor(pageViewer, scale) {
+        this.pageViewer = pageViewer
+        this.scale= scale 
+    }
+
+    dimensions() {
+        return this.pageViewer.viewportAtScale(this.scale).then((vp) => 
+            ({
+                height: vp.height,
+                width: vp.width
+            })
+        )
+    }
+
+    render(params) {
+        this.pageViewer.render(params)
+    }
+}
+
+export class ConstrainedPageViewer {
+    constructor(pageViewer, maxDim) {
+        this.pageViewer = pageViewer
+        this.maxDim = maxDim
+    }
+
+    scaledPageViewer() {
+        return this.scale().then((scale) =>
+            new ScaledPageViewer(this.pageViewer, scale)
+        )
+    }
+
+    scale() {
+        return this.pageViewer.viewportAtScale(1).then((vp) =>
+            Math.max(1, Math.min(this.maxDim/vp.width, this.maxDim/vp.height))
+        )
+    }
+
+    dimensions() {
+        return this.scaledPageViewer().then((scaledViewer) =>
+            scaledViewer.dimensions()
+        )
+    }
+
+    render(params) {
+        this.scaledPageViewer().then((viewer) =>
+            viewer.render(params)
+        )
+    }
+}
 
 class PageViewer {
     constructor(dataPromise) {
@@ -13,27 +67,28 @@ class PageViewer {
             )
     }
 
-    render(context) {
-        pdfJsPage.render(context)
+    viewportAtScale(scale) {
+        return this.pdfJsPage.then((page) => 
+            page.getViewport({scale: scale})
+        )
     }
 
-    scaledDims(scale) {
-        return this.pdfJsPage.then((p) => {
-            p.getViewport({scale: scale})
-            return {
-                height: dims.height,
-                width: dims.width
+
+    render(params) {
+        this.pdfJsPage.then((page) => {
+            var vp = page.getViewport({scale: params.scale})
+
+            var context = params.canvas.getContext('2d');
+
+            var context = {
+                canvasContext: context,
+                viewport: vp
             }
-        })
-    }
 
-    scaleToMaxDim(maxDim) {
-        return this.pdfJsPage.then((p) => {
-            p.getViewport({scale: 1})
-            return Math.max(1, Math.min(maxDim/dims.width, maxDim/dim.height))
+            page.render(context)
         })
-    }
 
+    }
 }
 
 

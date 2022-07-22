@@ -1,21 +1,22 @@
 import {createRef, render , Component } from 'inferno';
+import { ConstrainedPageViewer } from '../pdf/pdf';
 
 class PDFPageCollectionComponent extends Component {
     constructor(props) {
         super(props)
         this.props.children = props.collection.map((p) => 
             <PDFPreview pdf={p.viewer()} maxDim={150} />
-        )
+            )
     }
 
     render() {
         return (
-            <div>
+            <div id="pdf-collection">
                 <ul draggable="true" class="pdf-list">
                     {this.props.children}
                 </ul>
             </div>
-        )
+            )
     }
 }
 
@@ -23,39 +24,33 @@ class PDFCanvas extends Component {
     constructor(props) {
         super(props)
         this.canvasRef = createRef();
+
         this.state = {
-            pdf: props.pdf,
-            scale: props.scale
+            pdfViewer: props.pdf
         }
     }
 
+    componentDidMount(elt) {
+        this.renderPDF(this.canvasRef.current)
+    }
+
     componentDidUpdate(lastProps, lastState, snapshot) {
-        this.state.pdf.render(this.canvasRef.current)
+        this.renderPDF(this.canvasRef.current)
     }
 
     renderPDF(canvas) {
-        var scale = 1.5;
-        // Support HiDPI-screens.
-        var outputScale = window.devicePixelRatio || 1;
+            this.state.pdfViewer.dimensions().then((dims) => {
+                canvas.width = Math.floor(dims.width);
+                canvas.height = Math.floor(dims.height);
+                canvas.style.width = Math.floor(dims.width) + "px";
+                canvas.style.height =  Math.floor(dims.height) + "px";
 
-        var dims = this.state.pdf.scaledDims(scale)
-        canvas.width = Math.floor(viewport.width * outputScale);
-        canvas.height = Math.floor(viewport.height * outputScale);
-        canvas.style.width = Math.floor(viewport.width) + "px";
-        canvas.style.height =  Math.floor(viewport.height) + "px";
+                var renderContext = {
+                    canvas: canvas,
+                };
 
-        var transform = outputScale !== 1
-            ? [outputScale, 0, 0, outputScale, 0, 0]
-            : null;
-
-        self.renderContext = {
-            canvasContext: context,
-            transform: transform,
-            viewport: viewport
-        };
-
-        pdfPage.render(self.renderContext)
-
+                this.state.pdfViewer.render(renderContext)
+            })
     }
 
     render() {
@@ -67,13 +62,11 @@ class PDFCanvas extends Component {
 class PDFPreview extends Component {
     constructor(props) {
         super(props)
-        this.props.pdf = props.pdf
-        this.props.maxDim = props.maxDim
-        this.props.scale = this.props.pdf.scaleToMaxDim(this.props.maxDim)
+        this.props.pdf = new ConstrainedPageViewer(props.pdf, props.maxDim)
     }
 
     render() {
-        return (<PDFCanvas pdf={this.props.pdf} class="pdf-preview" scale={this.props.scale} />)
+        return (<PDFCanvas pdf={this.props.pdf} class="pdf-preview" />)
     }
 
 }
@@ -86,11 +79,12 @@ class PDFFull extends Component {
     }
 
     render() {
-        return (<PDFCanvas pdf={this.props.pdf} class="pdf-full" scale={this.props.scale} />)
+        return (<PDFCanvas pdf={this.props.pdf} class="pdf-full" />)
     }
 }
 
 export function attach(canvasesElt, pageDocs) {
+    render(null, canvasesElt)
     render(<PDFPageCollectionComponent collection={pageDocs} />, canvasesElt)
 }
 
