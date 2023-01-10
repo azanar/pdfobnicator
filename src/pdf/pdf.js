@@ -6,21 +6,29 @@ GlobalWorkerOptions.workerSrc = PdfjsWorker;
 
 export class ScaledPageViewer {
     constructor(pageViewer, scale) {
+        if (undefined === scale) {
+            throw "Scale must be defined"
+        }
         this.pageViewer = pageViewer
-        this.scale= scale 
+        this.scale = scale
     }
 
     dimensions() {
-        return this.pageViewer.viewportAtScale(this.scale).then((vp) => 
-            ({
-                height: vp.height,
-                width: vp.width
-            })
+        return this.pageViewer.viewportAtScale(this.scale).then((vp) =>
+        ({
+            height: vp.height,
+            width: vp.width
+        })
         )
     }
 
     render(params) {
-        this.pageViewer.render(params)
+        this.pageViewer.render(
+            { 
+                ...params,
+                scale: this.scale
+            }
+        )
     }
 }
 
@@ -37,9 +45,10 @@ export class ConstrainedPageViewer {
     }
 
     scale() {
-        return this.pageViewer.viewportAtScale(1).then((vp) =>
-            Math.max(1, Math.min(this.maxDim/vp.width, this.maxDim/vp.height))
-        )
+        return this.pageViewer.viewportAtScale(1).then((vp) => {
+            return Math.max(1, Math.min(this.maxDim / vp.width, this.maxDim / vp.height))
+        }
+            )
     }
 
     dimensions() {
@@ -57,26 +66,34 @@ export class ConstrainedPageViewer {
 
 class PageViewer {
     constructor(dataPromise) {
-        this.pdfJsPage = dataPromise.then((data) => 
-            getPdfJsDocument({data: data}).promise
+        this.pdfJsPage = dataPromise.then((data) =>
+            getPdfJsDocument({ data: data }).promise
         )
-            .then((viewerdoc) => 
+            .then((viewerdoc) =>
                 viewerdoc.getPage(1)
-            ).then((page) => 
+            ).then((page) =>
                 page
             )
     }
 
     viewportAtScale(scale) {
-        return this.pdfJsPage.then((page) => 
-            page.getViewport({scale: scale})
-        )
+        return this.pdfJsPage.then((page) => {
+            return page.getViewport({ scale: scale })
+        })
     }
 
 
     render(params) {
+        if (params.scale) {
+            if (! typeof params.scale == "number") {
+                throw "scale must be a number"
+            }
+            if (!Number.isFinite(params.scale) || params.scale <= 0) {
+                throw "scale must be sane"
+            }
+        }
         this.pdfJsPage.then((page) => {
-            var vp = page.getViewport({scale: params.scale})
+            var vp = page.getViewport({ scale: params.scale || 1.0 })
 
             var context = params.canvas.getContext('2d');
 
@@ -98,9 +115,9 @@ class PageDocument {
     }
 
     data() {
-        return this.docPromise.then((doc) => 
+        return this.docPromise.then((doc) =>
             doc.saveAsBase64()
-        ).then((data) => 
+        ).then((data) =>
             atob(data)
         )
     }
@@ -110,7 +127,7 @@ class PageDocument {
     }
 
     join(dest) {
-        this.docPromise.then((doc) => 
+        this.docPromise.then((doc) =>
             dest.copyPages(doc, [0]).then((page) => {
                 dest.addPage(page[0])
                 return dest
@@ -137,8 +154,8 @@ class PageDocCollection {
     }
 
     createDocument() {
-        PDFDocument.create().then((dest) => 
-            pages.forEach((page) => 
+        PDFDocument.create().then((dest) =>
+            pages.forEach((page) =>
                 page.join(dest)
             )
         )
@@ -159,7 +176,7 @@ export function extractPageDocuments(arrBuf) {
     return PDFDocument.load(arrBuf).then((src) => {
         const indices = src.getPageIndices()
 
-        return indices.map((idx) => 
+        return indices.map((idx) =>
             extractPageDocument(src, idx)
         )
     })
@@ -167,7 +184,7 @@ export function extractPageDocuments(arrBuf) {
 
 export function extractPageDocument(src, idx) {
     return new PageDocument(
-        PDFDocument.create().then((dest) => 
+        PDFDocument.create().then((dest) =>
             dest.copyPages(src, [idx]).then((page) => {
                 dest.addPage(page[0])
                 return dest

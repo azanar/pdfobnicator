@@ -4,7 +4,7 @@ module.exports = {
     mode: 'development',
     entry: './src/index.js',
     output: {
-        path: __dirname + '/public',
+        path: __dirname + '/public/js',
         filename: 'bundle.js',
         publicPath: 'http://localhost:8080/'
     },
