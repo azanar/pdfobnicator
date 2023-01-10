@@ -1,4 +1,5 @@
 import {createRef, render , Component } from 'inferno';
+import { Droppable } from '@shopify/draggable';
 import { ConstrainedPageViewer } from '../pdf/pdf';
 
 class PDFPageCollectionComponent extends Component {
@@ -54,7 +55,7 @@ class PDFCanvas extends Component {
     }
 
     render() {
-        return (<li><canvas draggable="true" class="pdf-preview" ref={this.canvasRef}></canvas></li>)
+        return (<li><canvas draggable="true" ref={this.canvasRef}></canvas></li>)
     }
 }
 
@@ -89,4 +90,9 @@ export function attach(canvasesElt, pageDocs) {
 }
 
 
-
+const droppable = new Droppable(document.querySelectorAll('.pdf-list'), {
+    draggable: '.pdf-preview',
+    dropzone: '.dropzone'
+  });
+  
+  droppable.on('droppable:dropped', () => console.log('droppable:dropped'));
