@@ -1,4 +1,4 @@
-import {createRef, render , Component } from 'inferno';
+import { createRef, render , Component } from 'inferno';
 import { Droppable } from '@shopify/draggable';
 import { ConstrainedPageViewer } from '../pdf/pdf';
 
