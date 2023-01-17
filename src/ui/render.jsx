@@ -5,15 +5,15 @@ import { ConstrainedPageViewer } from '../pdf/pdf';
 class PDFPageCollectionComponent extends Component {
     constructor(props) {
         super(props)
-        this.props.children = props.collection.map((p) => 
-            <PDFPreview pdf={p.viewer()} maxDim={150} />
+        this.props.children = props.collection.map((p, idx) => 
+            <PDFPreview pdf={p.viewer} page={idx+1} maxDim={150} />
             )
     }
 
     render() {
         return (
             <div id="pdf-collection">
-                <ul draggable="true" class="pdf-list">
+                <ul draggable="true" class="pdf-list collection">
                     {this.props.children}
                 </ul>
             </div>
@@ -40,7 +40,7 @@ class PDFCanvas extends Component {
     }
 
     renderPDF(canvas) {
-            this.state.pdfViewer.dimensions().then((dims) => {
+            this.state.pdfViewer.dimensions.then((dims) => {
                 canvas.width = Math.floor(dims.width);
                 canvas.height = Math.floor(dims.height);
                 canvas.style.width = Math.floor(dims.width) + "px";
@@ -55,7 +55,7 @@ class PDFCanvas extends Component {
     }
 
     render() {
-        return (<li><canvas draggable="true" ref={this.canvasRef}></canvas></li>)
+        return (<div><canvas draggable="true" ref={this.canvasRef}></canvas></div>)
     }
 }
 
@@ -64,14 +64,32 @@ class PDFPreview extends Component {
     constructor(props) {
         super(props)
         this.props.pdf = new ConstrainedPageViewer(props.pdf, props.maxDim)
+        this.props.canvas = <PDFCanvas pdf={this.props.pdf} class="pdf-preview" />
     }
 
     render() {
-        return (<PDFCanvas pdf={this.props.pdf} class="pdf-preview" />)
+        return (
+            <li class="collection-item">
+                <div>
+                    <b>Page:</b>{this.props.page}
+                </div>
+                <div>
+                    <i class="fa-solid fa-rotate-left" onClick={this.rotate(-90)}></i>
+                    <i class="fa-solid fa-rotate-right" onClick={this.rotate(90)}></i>
+                </div>
+                <div>{this.props.canvas}</div>
+            </li>
+        )
+    }
+
+    rotate(degrees) {
+        this.props.pdf.rotate(degrees)
+        this.props.canvas = <PDFCanvas pdf={this.props.pdf} class="pdf-preview" />
     }
 
 }
 
+/*
 class PDFFull extends Component {
     constructor(props) {
         super(props)
@@ -83,6 +101,7 @@ class PDFFull extends Component {
         return (<PDFCanvas pdf={this.props.pdf} class="pdf-full" />)
     }
 }
+*/
 
 export function attach(canvasesElt, pageDocs) {
     render(null, canvasesElt)

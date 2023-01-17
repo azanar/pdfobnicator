@@ -37,11 +37,14 @@
         "babel-plugin-syntax-jsx": "*",
         "coffee-loader": "*",
         "coffeescript": "*",
+        "gulp": "^4.0.2",
         "imports-loader": "*",
+        "jsdoc": "^4.0.0",
         "mem-fs": "*",
         "mem-fs-editor": "*",
         "webpack": "*",
-        "webpack-cli": "*"
+        "webpack-cli": "*",
+        "webpack-stream": "^7.0.0"
     },
     "browser": {
         "fs": false,
