@@ -27,8 +27,4 @@ build:
   script:
     - yarn install
     - yarn run gulp build
-    
-deploy:
-  stage: deploy
-  script: echo "Define your deployment script!"
-  environment: production
+  
