@@ -1,5 +1,4 @@
 import { collectPageDocuments, PageDocCollection } from '../../src/pdf/pdf.js'
-import { describe, it } from 'mocha'
 import * as fs from 'node:fs/promises'
 
 const assert = require('assert')

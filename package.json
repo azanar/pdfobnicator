@@ -45,6 +45,7 @@
         "eslint-plugin-n": "^15.0.0",
         "eslint-plugin-promise": "^6.0.0",
         "gulp": "^4.0.2",
+        "gulp-mocha": "^8.0.0",
         "imports-loader": "*",
         "jsdoc": "^4.0.0",
         "mem-fs": "*",
