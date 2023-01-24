@@ -4,7 +4,7 @@
     "description": "Pure Client-Side PDF splitter/merger",
     "private": true,
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "mocha --require @babel/register test/pdf"
     },
     "repository": {
         "type": "git",
@@ -31,6 +31,7 @@
         "@babel/cli": "*",
         "@babel/core": "*",
         "@babel/preset-env": "*",
+        "@babel/register": "^7.18.9",
         "@typescript-eslint/eslint-plugin": "^5.0.0",
         "@webpack-cli/generators": "*",
         "babel-loader": "*",
@@ -48,6 +49,7 @@
         "jsdoc": "^4.0.0",
         "mem-fs": "*",
         "mem-fs-editor": "*",
+        "mocha": "^10.2.0",
         "typescript": "*",
         "webpack": "*",
         "webpack-cli": "*",
