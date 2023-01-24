@@ -162,7 +162,7 @@ class PageDocument {
   }
 }
 
-class PageDocCollection {
+export class PageDocCollection {
   constructor () {
     this.pageDocs = []
   }
