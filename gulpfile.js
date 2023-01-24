@@ -1,6 +1,7 @@
 
 const gulp = require('gulp');
 const compiler = require('webpack');
+const mocha = require('gulp-mocha');
 const webpack = require('webpack-stream');
 
 gulp.task('build', function() {
@@ -10,6 +11,10 @@ gulp.task('build', function() {
       compiler
     ))
     .pipe(gulp.dest('public/js'))
+});
+
+gulp.task('test', function() {
+  return gulp.pipe(mocha())
 });
 
 gulp.task('default', function() {

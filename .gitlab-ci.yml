@@ -22,9 +22,25 @@ cache:
   paths:
     - node_modules/
 
-build:
-  stage: build
+stages:
+- install
+- build
+- test
+- deploy
+
+install:
+  stage: install
   script:
     - yarn install
+
+build:
+  stage: build
+  needs: [install]
+  script:
     - yarn run gulp build
-  
+
+test:
+  stage: test
+  needs: [install]
+  script:
+    - yarn run gulp test
