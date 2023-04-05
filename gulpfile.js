@@ -18,6 +18,8 @@ gulp.task('test', function () {
     .pipe(mocha({ require: '@babel/register' }))
 })
 
-gulp.task('default', function () {
-  gulp.watch(['src/**/*.js', 'src/**/*.jsx'], gulp.series('build'))
+gulp.task('watch', function () {
+    gulp.watch(['src/**/*.js', 'src/**/*.jsx'], gulp.series('build', 'test'))
 })
+
+gulp.task('default', gulp.series('build', 'test', 'watch'))
