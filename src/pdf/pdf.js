@@ -1,4 +1,6 @@
-import { PDFDocument, degrees } from 'pdf-lib'
+import { PDFDocument } from 'pdf-lib'
+import * as pdfLib from 'pdf-lib'
+
 
 import PdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry'
 import { getDocument as getPdfJsDocument, GlobalWorkerOptions } from 'pdfjs-dist'
@@ -121,7 +123,7 @@ class PageViewer {
   }
 }
 
-class PageDocument {
+export class PageDocument {
   constructor (docPromise) {
     this.docPromise = docPromise
   }
@@ -142,9 +144,9 @@ class PageDocument {
 
       const newRot = (rot + degrees) % 360
 
-      const normalizedRot = rot >= 0 ? rot : rot + 360
+      const normalizedRot = newRot >= 0 ? newRot : newRot + 360
 
-      page.setRotation(degrees(normalizedRot))
+      page.setRotation(pdfLib.degrees(normalizedRot))
     })
   }
 

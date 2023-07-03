@@ -26,6 +26,7 @@ stages:
 - install
 - build
 - test
+- lint
 - deploy
 
 install:
@@ -44,3 +45,9 @@ test:
   needs: [install]
   script:
     - yarn run gulp test
+
+lint:
+  stage: lint
+  needs: [build]
+  script:
+    - yarn run gulp lint

@@ -18,8 +18,14 @@ gulp.task('test', function () {
     .pipe(mocha({ require: '@babel/register' }))
 })
 
+gulp.task('lint', function () {
+  return gulp.src('test/pdf')
+    .pipe(mocha({ require: '@babel/register' }))
+})
+
+
 gulp.task('watch', function () {
-    gulp.watch(['src/**/*.js', 'src/**/*.jsx'], gulp.series('build', 'test'))
+    gulp.watch(['src/**/*.js', 'src/**/*.jsx','test/**/*.js'], gulp.series('build', 'test'))
 })
 
 gulp.task('default', gulp.series('build', 'test', 'watch'))
