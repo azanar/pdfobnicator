@@ -42,7 +42,7 @@ build:
 
 test:
   stage: test
-  needs: [install]
+  needs: [build]
   script:
     - yarn run gulp test
 
@@ -50,4 +50,4 @@ lint:
   stage: lint
   needs: [build]
   script:
-    - yarn run gulp lint
+    - yarn run eslint src test

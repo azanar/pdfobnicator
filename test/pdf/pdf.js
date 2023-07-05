@@ -2,8 +2,7 @@ import { PageDocument, collectPageDocuments, PageDocCollection } from '../../src
 import * as nodefs from 'node:fs/promises'
 import fs from 'fs'
 import { PDFDocument as pdflibDoc } from 'pdf-lib'
-
-const assert = require('assert')
+import assert from 'node:assert'
 
 describe('pdf', function () {
   describe('.collectPageDocuments()', function () {
@@ -13,10 +12,10 @@ describe('pdf', function () {
       }).then((buffer) =>
         collectPageDocuments(buffer)
       ).then((thing) => {
-        assert(thing)
-        assert(typeof thing === 'object')
-        assert(thing.constructor === PageDocCollection.prototype.constructor)
-        assert(thing.pageDocs.length === 2)
+        assert.ok(thing)
+        assert.ok(typeof thing === 'object')
+        assert.ok(thing.constructor === PageDocCollection.prototype.constructor)
+        assert.ok(thing.pageDocs.length === 2)
       }).then(
         done, done
       )

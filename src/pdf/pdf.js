@@ -96,7 +96,7 @@ class PageViewer {
 
   render (params) {
     if (params.scale) {
-      if (!typeof params.scale == 'number') {
+      if ((typeof params.scale) !== 'number') {
         throw 'scale must be a number'
       }
       if (!Number.isFinite(params.scale) || params.scale <= 0) {
@@ -145,6 +145,8 @@ export class PageDocument {
       const newRot = (rot + degrees) % 360
 
       const normalizedRot = newRot >= 0 ? newRot : newRot + 360
+
+      console.log(`rotating ${degrees}`)
 
       page.setRotation(pdfLib.degrees(normalizedRot))
     })

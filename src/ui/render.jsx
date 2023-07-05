@@ -68,14 +68,15 @@ class PDFPreview extends Component {
     }
 
     render() {
+        console.log("rendering!")
         return (
             <li class="collection-item">
                 <div>
                     <b>Page:</b>{this.props.page}
                 </div>
                 <div>
-                    <i class="fa-solid fa-rotate-left" onClick={this.rotate(-90)}></i>
-                    <i class="fa-solid fa-rotate-right" onClick={this.rotate(90)}></i>
+                    <span onClick={() => this.rotate(-90)}><i class="fa-solid fa-rotate-left"></i></span>
+                    <span onClick={() => this.rotate(90)}><i class="fa-solid fa-rotate-right"></i></span>
                 </div>
                 <div>{this.props.canvas}</div>
             </li>
@@ -84,7 +85,11 @@ class PDFPreview extends Component {
 
     rotate(degrees) {
         this.props.pdf.rotate(degrees)
-        this.props.canvas = <PDFCanvas pdf={this.props.pdf} class="pdf-preview" />
+        console.log("rotated!")
+        var newCanvas = <PDFCanvas pdf={this.props.pdf} class="pdf-preview" />
+        console.log("created!")
+        this.props.canvas = newCanvas
+        console.log("assigned!")
     }
 
 }
