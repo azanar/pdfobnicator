@@ -31,11 +31,11 @@ class PDFCanvas extends Component {
         }
     }
 
-    componentDidMount(elt) {
+    componentDidMount(_elt) {
         this.renderPDF(this.canvasRef.current)
     }
 
-    componentDidUpdate(lastProps, lastState, snapshot) {
+    componentDidUpdate(_lastProps, _lastState, _snapshot) {
         this.renderPDF(this.canvasRef.current)
     }
 
@@ -63,8 +63,8 @@ class PDFCanvas extends Component {
 class PDFPreview extends Component {
     constructor(props) {
         super(props)
-        this.props.pdf = new ConstrainedPageViewer(props.pdf, props.maxDim)
-        this.props.canvas = <PDFCanvas pdf={this.props.pdf} class="pdf-preview" />
+        this.state = {}
+        this.state.viewer = new ConstrainedPageViewer(props.pdf, props.maxDim)
     }
 
     render() {
@@ -78,18 +78,15 @@ class PDFPreview extends Component {
                     <span onClick={() => this.rotate(-90)}><i class="fa-solid fa-rotate-left"></i></span>
                     <span onClick={() => this.rotate(90)}><i class="fa-solid fa-rotate-right"></i></span>
                 </div>
-                <div>{this.props.canvas}</div>
+                <div>{<PDFCanvas pdf={this.state.viewer} class="pdf-preview"/>}</div>
             </li>
         )
     }
 
     rotate(degrees) {
         this.props.pdf.rotate(degrees)
-        console.log("rotated!")
-        var newCanvas = <PDFCanvas pdf={this.props.pdf} class="pdf-preview" />
-        console.log("created!")
-        this.props.canvas = newCanvas
-        console.log("assigned!")
+        var viewer = new ConstrainedPageViewer(this.props.pdf, this.props.maxDim)
+        this.setState({"viewer": viewer})
     }
 
 }
