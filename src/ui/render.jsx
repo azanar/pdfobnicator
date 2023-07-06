@@ -1,11 +1,105 @@
 import { createRef, render , Component } from 'inferno';
 import { Droppable } from '@shopify/draggable';
-import { ConstrainedPageViewer } from '../pdf/pdf';
+import { ConstrainedPageViewer, LocalFileHandle, EmptyFileHandle } from '../pdf/pdf';
+
+export class Wells extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            wells: [<EmptyWell wells={this} />]
+        }
+    }
+
+    render() {
+        return <div><h2>Wells!</h2>{this.state.wells}</div>
+    }
+
+    add(well) {
+        var wells = this.state.wells
+        wells.push(well)
+        this.setState(
+            {wells: wells}
+        )
+    }
+
+    remove(well) {
+        var wells = this.state.wells
+        var idx = wells.indexOf(well)
+        if (idx === -1) {
+            throw Error()
+        }
+        wells.splice(idx)
+        this.setState(
+            {wells: wells}
+        )
+    }
+}
+
+
+class EmptyWell extends Component {
+    constructor(props) {
+        super(props)
+        this.props.wells = props.wells
+    }
+
+    render() {
+        console.log("ping")
+        return <div id="well">
+            <span onClick={() => this.create()}><i class="fa-solid fa-file-circle-plus fa-2xl"></i></span>        
+            <span onClick={() => this.open()}><i class="fa-solid fa-file-import fa-2xl"></i></span>        
+        </div >
+    }
+
+    create() {
+        var handle = new EmptyFileHandle;
+        var well = <DocumentWell handle={handle} wells={this.props.wells}/>
+        this.props.wells.add(well)
+    }
+
+    open() {
+        const file = document.getElementById('file-selector').files[0]
+        const handle = new LocalFileHandle;
+        /* FIXME: can not create element until the file load is done*/
+        var well = <DocumentWell handle={handle} wells={this.props.wells}/>
+        this.props.wells.add(well)
+    }
+}
+
+class DocumentWell extends Component {
+    constructor(props) {
+        super(props)
+        this.props.wells = props.wells
+        this.props.handle = props.handle
+    }
+
+    render() {
+        return <div id="well">
+           <PDFDocument handle={this.props.handle} />
+        </div>
+    }
+
+}
+
+class PDFDocument extends Component {
+    constructor(props) {
+        super(props)
+        this.props.handle = props.handle
+    }
+
+    render() {
+        return <div id="pdf-document">
+            <div class="pdf-document-path">{this.props.handle.path}</div>
+            <div class="pdf-document-basename">{this.props.handle.path}</div>
+            <PDFPageCollectionComponent collection={this.props.handle.pageDocs} />
+        </div>
+    }
+
+}
 
 class PDFPageCollectionComponent extends Component {
     constructor(props) {
         super(props)
-        this.props.children = props.collection.map((p, idx) => 
+        this.props.collection = props.collection.map((p, idx) => 
             <PDFPreview pdf={p.viewer} page={idx+1} maxDim={150} />
             )
     }
@@ -54,6 +148,7 @@ class PDFCanvas extends Component {
             })
     }
 
+
     render() {
         return (<div><canvas draggable="true" ref={this.canvasRef}></canvas></div>)
     }
@@ -70,7 +165,7 @@ class PDFPreview extends Component {
     render() {
         console.log("rendering!")
         return (
-            <li class="collection-item">
+            <li class="collection-item" onDragOver={this.dragover} onDrop={this.drop} >
                 <div>
                     <b>Page:</b>{this.props.page}
                 </div>
@@ -81,6 +176,14 @@ class PDFPreview extends Component {
                 <div>{<PDFCanvas pdf={this.state.viewer} class="pdf-preview"/>}</div>
             </li>
         )
+    }
+
+    dragover(event) {
+       event.preventDefault() 
+    }
+
+    drop(event) {
+        event.preventDefault();
     }
 
     rotate(degrees) {
@@ -105,9 +208,8 @@ class PDFFull extends Component {
 }
 */
 
-export function attach(canvasesElt, pageDocs) {
-    render(null, canvasesElt)
-    render(<PDFPageCollectionComponent collection={pageDocs} />, canvasesElt)
+export function attach(root, wells) {
+    render(wells,root)
 }
 
 

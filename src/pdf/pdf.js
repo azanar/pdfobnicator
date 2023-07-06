@@ -111,10 +111,10 @@ class PageViewer {
     ).then((page) => {
       const vp = page.getViewport({ scale: params.scale || 1.0 })
 
-      var context = params.canvas.getContext('2d')
+      var canvasContext = params.canvas.getContext('2d')
 
       var context = {
-        canvasContext: context,
+        canvasContext: canvasContext,
         viewport: vp
       }
 
@@ -182,13 +182,29 @@ export class PageDocCollection {
   extend (pages) {
     this.pageDocs = this.pageDocs.concat(pages)
   }
+}
 
-  createDocument () {
-    PDFDocument.create().then((dest) =>
-      pages.forEach((page) =>
-        page.join(dest)
-      )
-    )
+export class LocalFileHandle {
+  constructor() { 
+    this.file = document.getElementById('file-selector').files[0]
+  }
+ 
+  get path() {
+    return this.file.name;
+  }
+
+  get pageDocs() {
+    return collectPageDocuments(this.file.arrayBuffer()); 
+  }
+}
+
+export class NewFileHandle {
+  get path() {
+    return "new.pdf";
+  }
+
+  get pageDocs() {
+    return new PageDocCollection()
   }
 }
 

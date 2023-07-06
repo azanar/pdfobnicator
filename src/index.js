@@ -1,14 +1,6 @@
-import { collectPageDocuments } from './pdf/pdf.js'
-import { attach } from './ui/render.jsx'
+import { attach, Wells } from './ui/render.jsx'
 
-document.getElementById('file-selector-go').addEventListener('click', (e) => {
-  const file = document.getElementById('file-selector').files[0]
-  const collectionPromise = file.arrayBuffer().then((arrBuf) =>
-    collectPageDocuments(arrBuf)
-  )
+const root = document.getElementById('wells')
+const wells = <Wells />
 
-  collectionPromise.then((collection) => {
-    const root = document.getElementById('canvases')
-    attach(root, collection)
-  })
-})
+attach(root,wells);
