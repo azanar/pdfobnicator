@@ -37,11 +37,6 @@ export class Wells extends Component {
 
 
 class EmptyWell extends Component {
-    constructor(props) {
-        super(props)
-        this.props.wells = props.wells
-    }
-
     render() {
         console.log("ping")
         return <div id="well">
@@ -58,7 +53,7 @@ class EmptyWell extends Component {
 
     open() {
         const file = document.getElementById('file-selector').files[0]
-        const handle = new LocalFileHandle;
+        const handle = new LocalFileHandle(file);
         /* FIXME: can not create element until the file load is done*/
         var well = <DocumentWell handle={handle} wells={this.props.wells}/>
         this.props.wells.add(well)
@@ -68,29 +63,56 @@ class EmptyWell extends Component {
 class DocumentWell extends Component {
     constructor(props) {
         super(props)
-        this.props.wells = props.wells
-        this.props.handle = props.handle
+
+        this.state = {
+            content: <Loading />
+        }
+
+        this.props.handle.pageDocs.then((p) =>
+            this.setState({
+                content: <PDFDocument collection={p} />
+            }),
+
+        
+        )
     }
 
     render() {
         return <div id="well">
-           <PDFDocument handle={this.props.handle} />
+            <div class="pdf-document-properties">
+                <div class="pdf-document-path">{this.props.handle.path}</div>
+                <div class="pdf-document-basename">{this.props.handle.path}</div>
+            </div>
+            <div class="pdf-document-content">
+                {this.state.content}
+            </div>
         </div>
     }
 
 }
 
+class Loading extends Component {
+
+    render() {
+        "Loading"
+    }
+}
+
+class Error extends Component {
+    render() {
+        `Error ${this.props.reason}`;
+    }
+}
+
 class PDFDocument extends Component {
     constructor(props) {
         super(props)
-        this.props.handle = props.handle
+        this.props.collection = props.collection
     }
 
     render() {
         return <div id="pdf-document">
-            <div class="pdf-document-path">{this.props.handle.path}</div>
-            <div class="pdf-document-basename">{this.props.handle.path}</div>
-            <PDFPageCollectionComponent collection={this.props.handle.pageDocs} />
+            <PDFPageCollectionComponent collection={this.props.collection} />
         </div>
     }
 
