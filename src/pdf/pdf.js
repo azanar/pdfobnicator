@@ -89,7 +89,7 @@ export class NewFileHandle {
   }
 }
 
-export function loader()
+export function loader() {}
 
 export function collectPageDocuments (arrBuf) {
   return extractPageDocuments(arrBuf).then((d) => {
