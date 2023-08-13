@@ -1,6 +1,6 @@
 # Pdfobnicator
 
-
+![](https://gitlab.com/azanar/pdfobnicator/badges/main/pipeline.svg)
 
 ## Getting started
 
