@@ -111,8 +111,6 @@ class PDFDocument extends Component {
     }
 
     render() {
-        console.log("Document!")
-        console.log(this.props.collection.pageDocs.length)
         return <div id="pdf-document">
             <PDFPageCollectionComponent collection={this.props.collection} />
         </div>
@@ -135,8 +133,6 @@ class PDFPageCollectionComponent extends Component {
     }
 
     render() {
-        console.log("Collection!")
-        console.log(this.props.collection.pageDocs.length)
         return (
             <div id="pdf-collection">
                 <ul class="pdf-list collection">
