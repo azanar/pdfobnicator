@@ -72,7 +72,7 @@ export class ConstrainedPageViewer {
   }
 }
 
-class PageViewer {
+export class PageViewer {
   constructor (pageDoc) {
     this.pageDoc = pageDoc
   }

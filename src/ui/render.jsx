@@ -1,25 +1,28 @@
 import { createRef, render , Component } from 'inferno';
 import { Droppable } from '@shopify/draggable';
-import { ConstrainedPageViewer, LocalFileHandle, EmptyFileHandle } from '../pdf/pdf';
+import { LocalFileHandle, NewFileHandle } from '../pdf/pdf';
+import { ConstrainedPageViewer, PageViewer } from '../pdf/viewer';
 
 export class Wells extends Component {
     constructor(props) {
         super(props)
+        const initDocWells = props.handles.map((handle) => <DocumentWell handle={handle} />)
         this.state = {
-            wells: [<EmptyWell wells={this} />]
+            wells: initDocWells,
+            emptyWell: <EmptyWell wells={this} /> 
         }
     }
 
     render() {
-        return <div><h2>Wells!</h2>{this.state.wells}</div>
+        return <div><h2>Wells!</h2>{this.state.wells}{this.state.emptyWell}</div>
     }
 
     add(well) {
-        var wells = this.state.wells
-        wells.push(well)
-        this.setState(
-            {wells: wells}
-        )
+        this.setState((prevState) => {
+            return {
+                wells: prevState.wells.concat(well)
+            }
+        })
     }
 
     remove(well) {
@@ -38,7 +41,6 @@ export class Wells extends Component {
 
 class EmptyWell extends Component {
     render() {
-        console.log("ping")
         return <div id="well">
             <span onClick={() => this.create()}><i class="fa-solid fa-file-circle-plus fa-2xl"></i></span>        
             <span onClick={() => this.open()}><i class="fa-solid fa-file-import fa-2xl"></i></span>        
@@ -46,7 +48,7 @@ class EmptyWell extends Component {
     }
 
     create() {
-        var handle = new EmptyFileHandle;
+        var handle = new NewFileHandle;
         var well = <DocumentWell handle={handle} wells={this.props.wells}/>
         this.props.wells.add(well)
     }
@@ -60,7 +62,7 @@ class EmptyWell extends Component {
     }
 }
 
-class DocumentWell extends Component {
+export class DocumentWell extends Component {
     constructor(props) {
         super(props)
 
@@ -72,8 +74,6 @@ class DocumentWell extends Component {
             this.setState({
                 content: <PDFDocument collection={p} />
             }),
-
-        
         )
     }
 
@@ -111,6 +111,8 @@ class PDFDocument extends Component {
     }
 
     render() {
+        console.log("Document!")
+        console.log(this.props.collection.pageDocs.length)
         return <div id="pdf-document">
             <PDFPageCollectionComponent collection={this.props.collection} />
         </div>
@@ -121,20 +123,71 @@ class PDFDocument extends Component {
 class PDFPageCollectionComponent extends Component {
     constructor(props) {
         super(props)
-        this.props.collection = props.collection.map((p, idx) => 
-            <PDFPreview pdf={p.viewer} page={idx+1} maxDim={150} />
-            )
+        this.props.collection = props.collection
+
+        const elements = this.props.collection.map((p, idx) => 
+            <PDFPreview pdf={p} page={idx+1} maxDim={150} />
+        )
+
+        this.state = {
+            elements: elements
+        }
     }
 
     render() {
+        console.log("Collection!")
+        console.log(this.props.collection.pageDocs.length)
         return (
             <div id="pdf-collection">
-                <ul draggable="true" class="pdf-list collection">
-                    {this.props.children}
+                <ul class="pdf-list collection">
+                    {this.state.elements}
                 </ul>
             </div>
             )
     }
+}
+
+
+class PDFPreview extends Component {
+    constructor(props) {
+        super(props)
+
+        const innerViewer = new PageViewer(props.pdf)
+
+        this.state = {
+            viewer: new ConstrainedPageViewer(innerViewer, props.maxDim)
+        }
+    }
+
+    render() {
+        return (
+            <li class="collection-item" onDragOver={this.dragover} onDrop={this.drop} >
+                <div>
+                    <b>Page:</b>{this.props.page}
+                </div>
+                <div>
+                    <span onClick={() => this.rotate(-90)}><i class="fa-solid fa-rotate-left"></i></span>
+                    <span onClick={() => this.rotate(90)}><i class="fa-solid fa-rotate-right"></i></span>
+                </div>
+                <div><PDFCanvas pdf={this.state.viewer} class="pdf-preview"/></div> 
+            </li>
+        )
+    }
+
+    dragover(event) {
+       event.preventDefault() 
+    }
+
+    drop(event) {
+        event.preventDefault();
+    }
+
+    rotate(degrees) {
+        this.props.pdf.rotate(degrees)
+        var viewer = new ConstrainedPageViewer(this.props.pdf, this.props.maxDim)
+        this.setState({"viewer": viewer})
+    }
+
 }
 
 class PDFCanvas extends Component {
@@ -174,46 +227,6 @@ class PDFCanvas extends Component {
     render() {
         return (<div><canvas draggable="true" ref={this.canvasRef}></canvas></div>)
     }
-}
-
-
-class PDFPreview extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-        this.state.viewer = new ConstrainedPageViewer(props.pdf, props.maxDim)
-    }
-
-    render() {
-        console.log("rendering!")
-        return (
-            <li class="collection-item" onDragOver={this.dragover} onDrop={this.drop} >
-                <div>
-                    <b>Page:</b>{this.props.page}
-                </div>
-                <div>
-                    <span onClick={() => this.rotate(-90)}><i class="fa-solid fa-rotate-left"></i></span>
-                    <span onClick={() => this.rotate(90)}><i class="fa-solid fa-rotate-right"></i></span>
-                </div>
-                <div>{<PDFCanvas pdf={this.state.viewer} class="pdf-preview"/>}</div>
-            </li>
-        )
-    }
-
-    dragover(event) {
-       event.preventDefault() 
-    }
-
-    drop(event) {
-        event.preventDefault();
-    }
-
-    rotate(degrees) {
-        this.props.pdf.rotate(degrees)
-        var viewer = new ConstrainedPageViewer(this.props.pdf, this.props.maxDim)
-        this.setState({"viewer": viewer})
-    }
-
 }
 
 /*

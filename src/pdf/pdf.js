@@ -31,10 +31,6 @@ export class PageDocument {
     })
   }
 
-  get viewer () {
-    return new PageViewer(this)
-  }
-
   join (dest) {
     this.docPromise.then((doc) =>
       dest.copyPages(doc, [0]).then((page) => {
@@ -63,6 +59,25 @@ export class PageDocCollection {
   }
 }
 
+export class UrlFileHandle {
+  constructor(url) { 
+    this.url = url
+  }
+ 
+  get path() {
+    return this.url;
+  }
+
+  get pageDocs() {
+    return fetch(this.url).then((pdf) =>
+        pdf.arrayBuffer()
+    ).then((arrBuf) =>
+        collectPageDocuments(arrBuf)
+    )
+  }
+
+}
+
 export class LocalFileHandle {
   constructor() { 
     this.file = document.getElementById('file-selector').files[0]
@@ -85,7 +100,7 @@ export class NewFileHandle {
   }
 
   get pageDocs() {
-    return new PageDocCollection()
+    return new Promise((resolve) => resolve(new PageDocCollection()))
   }
 }
 
@@ -102,7 +117,6 @@ export function collectPageDocuments (arrBuf) {
 export function extractPageDocuments (arrBuf) {
   return PDFDocument.load(arrBuf).then((src) => {
     const indices = src.getPageIndices()
-
     return indices.map((idx) =>
       extractPageDocument(src, idx)
     )
