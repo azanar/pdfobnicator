@@ -1,5 +1,5 @@
 import { UrlFileHandle } from './pdf/pdf.js';
-import { attach, Wells, DocumentWell } from './ui/render.jsx'
+import { attach, Wells } from './ui/render.jsx'
 
 const root = document.getElementById('wells')
 

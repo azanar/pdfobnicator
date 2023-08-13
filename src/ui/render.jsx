@@ -41,7 +41,7 @@ export class Wells extends Component {
 
 class EmptyWell extends Component {
     render() {
-        return <div id="well">
+        return <div class="well">
             <span onClick={() => this.create()}><i class="fa-solid fa-file-circle-plus fa-2xl"></i></span>        
             <span onClick={() => this.open()}><i class="fa-solid fa-file-import fa-2xl"></i></span>        
         </div >
@@ -62,7 +62,8 @@ class EmptyWell extends Component {
     }
 }
 
-export class DocumentWell extends Component {
+
+class DocumentWell extends Component {
     constructor(props) {
         super(props)
 
@@ -78,7 +79,7 @@ export class DocumentWell extends Component {
     }
 
     render() {
-        return <div id="well">
+        return <div class="well">
             <div class="pdf-document-properties">
                 <div class="pdf-document-path">{this.props.handle.path}</div>
                 <div class="pdf-document-basename">{this.props.handle.path}</div>
@@ -111,7 +112,7 @@ class PDFDocument extends Component {
     }
 
     render() {
-        return <div id="pdf-document">
+        return <div class="pdf-document">
             <PDFPageCollectionComponent collection={this.props.collection} />
         </div>
     }
@@ -134,7 +135,7 @@ class PDFPageCollectionComponent extends Component {
 
     render() {
         return (
-            <div id="pdf-collection">
+            <div class="pdf-collection">
                 <ul class="pdf-list collection">
                     {this.state.elements}
                 </ul>
@@ -143,6 +144,27 @@ class PDFPageCollectionComponent extends Component {
     }
 }
 
+class PDFDropWell extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <li class="drop-well" onDragOver={this.dragover} onDrop={this.drop} >
+                <div>Drop Here!</div>
+            </li>
+        )
+    }
+
+    dragover(event) {
+       event.preventDefault() 
+    }
+
+    drop(event) {
+        event.preventDefault();
+    }
+}
 
 class PDFPreview extends Component {
     constructor(props) {
@@ -170,13 +192,6 @@ class PDFPreview extends Component {
         )
     }
 
-    dragover(event) {
-       event.preventDefault() 
-    }
-
-    drop(event) {
-        event.preventDefault();
-    }
 
     rotate(degrees) {
         this.props.pdf.rotate(degrees)

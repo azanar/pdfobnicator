@@ -1,6 +1,5 @@
 import { PDFDocument } from 'pdf-lib'
 import * as pdfLib from 'pdf-lib'
-import { PageViewer} from './viewer'
 
 export class PageDocument {
   constructor (docPromise) {
@@ -103,8 +102,6 @@ export class NewFileHandle {
     return new Promise((resolve) => resolve(new PageDocCollection()))
   }
 }
-
-export function loader() {}
 
 export function collectPageDocuments (arrBuf) {
   return extractPageDocuments(arrBuf).then((d) => {
