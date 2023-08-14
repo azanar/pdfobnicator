@@ -21,6 +21,7 @@
         "@shopify/draggable": "^1.0.0-beta.8",
         "bootstrap": "*",
         "inferno": "*",
+        "interleave": "^1.0.0",
         "materialize-css": "^1.0.0",
         "path-browserify": "*",
         "pdf-lib": "*",

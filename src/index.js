@@ -1,10 +1,10 @@
 import { UrlFileHandle } from './pdf/pdf.js';
-import { attach, Wells } from './ui/render.jsx'
+import { attach, DocumentWells } from './ui/render.jsx'
 
 const root = document.getElementById('wells')
 
-const handle = new UrlFileHandle("/test/pdf/fixtures/two-page.pdf")
+const handles = [new UrlFileHandle("/test/pdf/fixtures/two-page.pdf"), new UrlFileHandle("/test/pdf/fixtures/two-page.pdf"),]
 
-const wells = <Wells handles={[handle]}/>
+const wells = <DocumentWells handles={handles}/>
 
 attach(root,wells);

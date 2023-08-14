@@ -1,9 +1,10 @@
 import { createRef, render , Component } from 'inferno';
 import { Droppable } from '@shopify/draggable';
+import interleave from 'interleave';
 import { LocalFileHandle, NewFileHandle } from '../pdf/pdf';
 import { ConstrainedPageViewer, PageViewer } from '../pdf/viewer';
 
-export class Wells extends Component {
+export class DocumentWells extends Component {
     constructor(props) {
         super(props)
         const initDocWells = props.handles.map((handle) => <DocumentWell handle={handle} />)
@@ -41,7 +42,7 @@ export class Wells extends Component {
 
 class EmptyWell extends Component {
     render() {
-        return <div class="well">
+        return <div class="well ">
             <span onClick={() => this.create()}><i class="fa-solid fa-file-circle-plus fa-2xl"></i></span>        
             <span onClick={() => this.open()}><i class="fa-solid fa-file-import fa-2xl"></i></span>        
         </div >
@@ -73,7 +74,7 @@ class DocumentWell extends Component {
 
         this.props.handle.pageDocs.then((p) =>
             this.setState({
-                content: <PDFDocument collection={p} />
+                content: <PDFDocumentWell collection={p} />
             }),
         )
     }
@@ -105,7 +106,7 @@ class Error extends Component {
     }
 }
 
-class PDFDocument extends Component {
+class PDFDocumentWell extends Component {
     constructor(props) {
         super(props)
         this.props.collection = props.collection
@@ -124,12 +125,14 @@ class PDFPageCollectionComponent extends Component {
         super(props)
         this.props.collection = props.collection
 
-        const elements = this.props.collection.map((p, idx) => 
-            <PDFPreview pdf={p} page={idx+1} maxDim={150} />
+        const previews = this.props.collection.map((p, idx) => 
+            <PDFPreviewWell pdf={p} page={idx+1} maxDim={150} />
         )
 
+        const wells = interleave(previews, PDFDropWell.generator())
+
         this.state = {
-            elements: elements
+            wells: wells
         }
     }
 
@@ -137,7 +140,7 @@ class PDFPageCollectionComponent extends Component {
         return (
             <div class="pdf-collection">
                 <ul class="pdf-list collection">
-                    {this.state.elements}
+                    {this.state.wells}
                 </ul>
             </div>
             )
@@ -145,6 +148,12 @@ class PDFPageCollectionComponent extends Component {
 }
 
 class PDFDropWell extends Component {
+    static *generator() {
+        for(;;) {
+            yield new PDFDropWell
+        }
+    }
+
     constructor(props) {
         super(props)
     }
@@ -166,7 +175,7 @@ class PDFDropWell extends Component {
     }
 }
 
-class PDFPreview extends Component {
+class PDFPreviewWell extends Component {
     constructor(props) {
         super(props)
 
@@ -211,10 +220,12 @@ class PDFCanvas extends Component {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     componentDidMount(_elt) {
         this.renderPDF(this.canvasRef.current)
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     componentDidUpdate(_lastProps, _lastState, _snapshot) {
         this.renderPDF(this.canvasRef.current)
     }
