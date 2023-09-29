@@ -4,6 +4,7 @@
     "description": "Pure Client-Side PDF splitter/merger",
     "private": true,
     "scripts": {
+        "build": "yarn run gulp build",
         "test": "mocha --require @babel/register test/pdf"
     },
     "repository": {
