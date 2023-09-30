@@ -22,7 +22,7 @@
         "@shopify/draggable": "^1.0.0-beta.8",
         "bootstrap": "*",
         "inferno": "*",
-        "interleaver.js": "*",
+        "interleaver.js": "^1.0.0-dev.1",
         "materialize-css": "^1.0.0",
         "path-browserify": "*",
         "pdf-lib": "*",

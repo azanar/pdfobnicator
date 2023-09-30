@@ -4547,7 +4547,7 @@ inquirer@^8.0.0:
     through "^2.3.6"
     wrap-ansi "^7.0.0"
 
-interleaver.js@*:
+interleaver.js@^1.0.0-dev.1:
   version "1.0.0-dev.1"
   resolved "https://registry.yarnpkg.com/interleaver.js/-/interleaver.js-1.0.0-dev.1.tgz#7ad7f0772728dabaa46896900cdee6a98f1be1a9"
   integrity sha512-fENn6WWOAMgfy5Fd0avayWm7qZtTYECUHXgfoweLDpGuAN6hSakzE9v3Blu76LoKSxFtidEt3ChY6nAEbTARcg==
