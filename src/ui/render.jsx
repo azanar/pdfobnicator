@@ -1,6 +1,6 @@
 import { createRef, render , Component } from 'inferno';
 import { Droppable } from '@shopify/draggable';
-import interleave from 'interleave';
+import { interleave0 } from 'interleave.js';
 import { LocalFileHandle, NewFileHandle } from '../pdf/pdf';
 import { ConstrainedPageViewer, PageViewer } from '../pdf/viewer';
 
@@ -129,7 +129,8 @@ class PDFPageCollectionComponent extends Component {
             <PDFPreviewWell pdf={p} page={idx+1} maxDim={150} />
         )
 
-        const wells = interleave(previews, PDFDropWell.generator())
+        const wellGen = interleave0(previews, PDFDropWell.generator())
+        const wells = Array.from(wellGen)
 
         this.state = {
             wells: wells
@@ -150,7 +151,7 @@ class PDFPageCollectionComponent extends Component {
 class PDFDropWell extends Component {
     static *generator() {
         for(;;) {
-            yield new PDFDropWell
+            yield <PDFDropWell />
         }
     }
 
