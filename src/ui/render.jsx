@@ -1,6 +1,6 @@
 import { createRef, render , Component } from 'inferno';
 import { Droppable } from '@shopify/draggable';
-import { interleave0 } from 'interleave.js';
+import { interleave0 } from 'interleaver.js';
 import { LocalFileHandle, NewFileHandle } from '../pdf/pdf';
 import { ConstrainedPageViewer, PageViewer } from '../pdf/viewer';
 
