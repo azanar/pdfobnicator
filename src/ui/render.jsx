@@ -27,14 +27,17 @@ export class DocumentWells extends Component {
     }
 
     remove(well) {
-        var wells = this.state.wells
+        var wellNodes = this.state.wells
+        const wells = wellNodes.map((w) => w.children)
         var idx = wells.indexOf(well)
+
         if (idx === -1) {
-            throw Error()
+            throw new Error()
         }
-        wells.splice(idx)
+
+        wellNodes = wellNodes.slice(0,idx).concat(wellNodes.slice(idx+1))
         this.setState(
-            {wells: wells}
+            {wells: wellNodes}
         )
     }
 }
@@ -81,9 +84,14 @@ class DocumentWell extends Component {
 
     render() {
         return <div class="well">
-            <div class="pdf-document-properties">
-                <div class="pdf-document-path">{this.props.handle.path}</div>
-                <div class="pdf-document-basename">{this.props.handle.path}</div>
+            <div class="pdf-document-head">
+                <div class="pdf-document-properties">
+                    <div class="pdf-document-path">{this.props.handle.path}</div>
+                    <div class="pdf-document-basename">{this.props.handle.path}</div>
+                </div>
+                <div class="pdf-document-actions">
+                    <div class="pdf-document-close"><span onClick={() => this.close()}><i class="fa-solid fa-xmark"></i></span></div>
+                </div>
             </div>
             <div class="pdf-document-content">
                 {this.state.content}
@@ -91,18 +99,21 @@ class DocumentWell extends Component {
         </div>
     }
 
+    close() {
+        this.props.wells.remove(this);
+    }
 }
 
 class Loading extends Component {
 
     render() {
-        "Loading"
+        return <div class="well">Loading</div>
     }
 }
 
 class Error extends Component {
     render() {
-        `Error ${this.props.reason}`;
+        return <div class="well">Error ${this.props.reason}</div>;
     }
 }
 
@@ -130,7 +141,7 @@ class PDFPageCollectionComponent extends Component {
         )
 
         const wellGen = interleave0(previews, PDFDropWell.generator())
-        const wells = Array.from(wellGen)
+        const wells = [<PDFDropWell />, ...Array.from(wellGen)]
 
         this.state = {
             wells: wells
@@ -161,17 +172,19 @@ class PDFDropWell extends Component {
 
     render() {
         return (
-            <li class="drop-well" onDragOver={this.dragover} onDrop={this.drop} >
+            <li class="well drop-well" onDragOver={this.dragover} onDrop={this.drop} >
                 <div>Drop Here!</div>
             </li>
         )
     }
 
     dragover(event) {
+       debugger
        event.preventDefault() 
     }
 
     drop(event) {
+        debugger
         event.preventDefault();
     }
 }
@@ -189,7 +202,7 @@ class PDFPreviewWell extends Component {
 
     render() {
         return (
-            <li class="collection-item" onDragOver={this.dragover} onDrop={this.drop} >
+            <li class="well collection-item" onDragOver={this.dragover} onDrop={this.drop} >
                 <div>
                     <b>Page:</b>{this.props.page}
                 </div>

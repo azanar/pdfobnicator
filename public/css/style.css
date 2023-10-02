@@ -1,0 +1,18 @@
+.pdf-document-head {
+    display: flex;                  /* establish flex container */
+    flex-direction: row;            /* default value; can be omitted */
+    flex-wrap: nowrap;              /* default value; can be omitted */
+    justify-content: space-between;
+}
+
+.pdf-document-actions {
+}
+
+.pdf-preview {
+    border: solid 2px;
+}
+
+.well {
+    border: solid 2px;
+    padding: 1em;
+}
