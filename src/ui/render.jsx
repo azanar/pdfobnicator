@@ -3,6 +3,7 @@ import { Droppable } from '@shopify/draggable';
 import { interleave0 } from 'interleaver.js';
 import { LocalFileHandle, NewFileHandle } from '../pdf/pdf';
 import { ConstrainedPageViewer, PageViewer } from '../pdf/viewer';
+import M from "materialize-css";
 
 export class DocumentWells extends Component {
     constructor(props) {
@@ -59,9 +60,14 @@ class EmptyWell extends Component {
 
     open() {
         const file = document.getElementById('file-selector').files[0]
+        if (file === undefined) {
+            return
+        }
         const handle = new LocalFileHandle(file);
         /* FIXME: can not create element until the file load is done*/
+        console.log("creating well for document " + handle.id)
         var well = <DocumentWell handle={handle} wells={this.props.wells}/>
+        console.log("created well for document " + well.props.handle.id)
         this.props.wells.add(well)
     }
 }
@@ -75,9 +81,15 @@ class DocumentWell extends Component {
             content: <Loading />
         }
 
+        console.log("constructing well for document " + this.props.handle.id)
+        
         this.props.handle.pageDocs.then((p) =>
             this.setState({
                 content: <PDFDocumentWell collection={p} />
+            }),
+            (_) =>
+            this.setState({
+                content: <Error />
             }),
         )
     }
@@ -151,11 +163,14 @@ class PDFPageCollectionComponent extends Component {
     render() {
         return (
             <div class="pdf-collection">
-                <ul class="pdf-list collection">
+                <ul class="pdf-list collection collapsible">
                     {this.state.wells}
                 </ul>
             </div>
             )
+    }
+    componentDidMount() {
+        M.Collapsible.init(this)
     }
 }
 
@@ -179,12 +194,12 @@ class PDFDropWell extends Component {
     }
 
     dragover(event) {
-       debugger
+        console.log("dragged page " + this.page + " of pdf over drop well")
        event.preventDefault() 
     }
 
     drop(event) {
-        debugger
+        console.log("dropped page " + this.page + " of pdf onto drop well")
         event.preventDefault();
     }
 }
@@ -201,16 +216,19 @@ class PDFPreviewWell extends Component {
     }
 
     render() {
+        console.log("drawing page " + this.props.page)
         return (
-            <li class="well collection-item" onDragOver={this.dragover} onDrop={this.drop} >
-                <div>
-                    <b>Page:</b>{this.props.page}
+            <li class="well collection-item" onDragStart={this.dragstart} onDragOver={this.dragover} onDrop={this.drop} >
+                <div class="collapsible-header">
+                    <div>
+                        <b>Page:</b>{this.props.page}
+                    </div>
+                    <div>
+                        <span onClick={() => this.rotate(-90)}><i class="fa-solid fa-rotate-left"></i></span>
+                        <span onClick={() => this.rotate(90)}><i class="fa-solid fa-rotate-right"></i></span>
+                    </div>
                 </div>
-                <div>
-                    <span onClick={() => this.rotate(-90)}><i class="fa-solid fa-rotate-left"></i></span>
-                    <span onClick={() => this.rotate(90)}><i class="fa-solid fa-rotate-right"></i></span>
-                </div>
-                <div><PDFCanvas pdf={this.state.viewer} class="pdf-preview"/></div> 
+                <div class="collapsible-body"><PDFCanvas pdf={this.state.viewer} class="pdf-preview"/></div> 
             </li>
         )
     }
@@ -220,6 +238,20 @@ class PDFPreviewWell extends Component {
         this.props.pdf.rotate(degrees)
         var viewer = new ConstrainedPageViewer(this.props.pdf, this.props.maxDim)
         this.setState({"viewer": viewer})
+    }
+
+    dragover(event) {
+        console.log("dragged over page " + this.page + " well")
+       event.preventDefault() 
+    }
+
+    drop(event) {
+        console.log("dropped onto page " + this.page + " well")
+        event.preventDefault();
+    }
+
+    dragstart(event) {
+        console.log("picked up page " + this.page + " of pdf")
     }
 
 }
@@ -241,7 +273,7 @@ class PDFCanvas extends Component {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     componentDidUpdate(_lastProps, _lastState, _snapshot) {
-        this.renderPDF(this.canvasRef.current)
+        //this.renderPDF(this.canvasRef.current)
     }
 
     renderPDF(canvas) {
@@ -261,6 +293,7 @@ class PDFCanvas extends Component {
 
 
     render() {
+        console.log("redrawing")
         return (<div><canvas draggable="true" ref={this.canvasRef}></canvas></div>)
     }
 }

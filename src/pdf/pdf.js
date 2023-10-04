@@ -78,8 +78,10 @@ export class UrlFileHandle {
 }
 
 export class LocalFileHandle {
-  constructor() { 
-    this.file = document.getElementById('file-selector').files[0]
+  constructor(file) { 
+    this.id = Math.random()
+    this.file = file
+    console.log("created handle for document " + this.id)
   }
  
   get path() {
@@ -87,6 +89,7 @@ export class LocalFileHandle {
   }
 
   get pageDocs() {
+    console.log("hydrading handle for document " + this.id)
     return this.file.arrayBuffer().then((arrBuf) =>
       collectPageDocuments(arrBuf)
     )
