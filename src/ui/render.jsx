@@ -18,7 +18,7 @@ export class DocumentWells extends Component {
     render() {
         return <div><h2>Wells!</h2>{this.state.wells}{this.state.emptyWell}</div>
     }
-
+ 
     add(well) {
         this.setState((prevState) => {
             return {
@@ -42,7 +42,6 @@ export class DocumentWells extends Component {
         )
     }
 }
-
 
 class EmptyWell extends Component {
     render() {
@@ -163,14 +162,29 @@ class PDFPageCollectionComponent extends Component {
     render() {
         return (
             <div class="pdf-collection">
-                <ul class="pdf-list collection collapsible">
-                    {this.state.wells}
-                </ul>
+                <Collapsible inner={this.state.wells} />
             </div>
             )
     }
+}
+
+class Collapsible extends Component {
+    constructor(props) {
+        super(props)
+        this.props.open = <span>OPEN!</span>
+        this.props.close = <span>CLOSE!</span>
+        this.props.collapsible = <ul class="pdf-list collapsible">{this.props.inner}</ul>
+    }
+
+    render() {
+        return (
+            this.props.collapsible
+        )
+    }
+
     componentDidMount() {
-        M.Collapsible.init(this)
+        debugger
+        M.Collapsible.init(this.props.collapsible.dom)
     }
 }
 
@@ -218,9 +232,10 @@ class PDFPreviewWell extends Component {
     render() {
         console.log("drawing page " + this.props.page)
         return (
-            <li class="well collection-item" onDragStart={this.dragstart} onDragOver={this.dragover} onDrop={this.drop} >
+            <li class="well active" onDragStart={this.dragstart} onDragOver={this.dragover} onDrop={this.drop} >
                 <div class="collapsible-header">
                     <div>
+                        <i class="fa-solid fa-bars"></i>
                         <b>Page:</b>{this.props.page}
                     </div>
                     <div>
@@ -244,6 +259,7 @@ class PDFPreviewWell extends Component {
         console.log("dragged over page " + this.page + " well")
        event.preventDefault() 
     }
+    
 
     drop(event) {
         console.log("dropped onto page " + this.page + " well")
