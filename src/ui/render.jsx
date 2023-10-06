@@ -86,9 +86,9 @@ class DocumentWell extends Component {
             this.setState({
                 content: <PDFDocumentWell collection={p} />
             }),
-            (_) =>
+            (e) =>
             this.setState({
-                content: <Error />
+                content: <Error reason={e}/>
             }),
         )
     }
