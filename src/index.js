@@ -1,16 +1,22 @@
-import { UrlFileHandle } from './pdf/pdf.js';
-import { attach, DocumentWells } from './ui/render.jsx'
+import { UrlFileHandle } from './pdf/handle/url';
+import { attach } from './ui/render'
+
+import { DocumentWells } from './ui/wells' 
+import { Document } from './pdf/document';
 
 const root = document.getElementById('wells')
 
 const url = new URL(document.URL)
 console.log(url)
-let handles = []
+let collections = []
 if (url.searchParams.get("test")) {
     console.log("test mode active!")
-    handles = [new UrlFileHandle("sample.pdf"), new UrlFileHandle("sample.pdf")]
+    const handles = [new UrlFileHandle("sample.pdf"), new UrlFileHandle("sample.pdf")]
+    const documents = handles.map((h) => h.document)
+    const vdocs = documents.map((d) => d.extract())
 }
-const wells = <DocumentWells handles={handles}/>
+debugger
+const wells = <DocumentWells collections={collections}/>
 
 attach(root,wells);
  

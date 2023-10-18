@@ -1,7 +1,6 @@
 export class Collection {
-    constructor () {
-        this.arr = []
-        this.dict = {}
+    constructor (vdocs) {
+        this.arr = vdocs
     }
     
     add (page, idx) {
@@ -18,5 +17,9 @@ export class Collection {
     
     extend (pages) {
         this.arr = this.arr.concat(pages)
+    }
+
+    collect() {
+        return
     }
 }

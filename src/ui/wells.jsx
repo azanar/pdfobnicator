@@ -1,12 +1,12 @@
 import { Component } from 'inferno';
 
-import { EmptyWell as Empty } from 'wells/empty'
-import { DocumentWell as Document } from 'wells/empty'
+import { EmptyWell as Empty } from './wells/empty'
+import { DocumentWell as Document } from './wells/document'
 
 export class DocumentWells extends Component {
     constructor(props) {
         super(props)
-        const initDocWells = props.handles.map((handle) => <Document handle={handle} />)
+        const initDocWells = props.collections.map((collection) => <Document collection={collection} />)
         this.state = {
             wells: initDocWells,
             emptyWell: <Empty wells={this} /> 

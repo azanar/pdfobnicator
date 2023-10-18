@@ -1,8 +1,9 @@
 import { Component } from 'inferno';
 
-import { LocalFileHandle, NewFileHandle } from '../pdf/pdf';
+import { LocalFileHandle } from '../../pdf/handle/local';
+import { NewFileHandle } from '../../pdf/handle/new';
 
-import { DocumentWell as Document } from 'wells/empty'
+import { DocumentWell as Document } from './document'
 
 export class EmptyWell extends Component {
     render() {

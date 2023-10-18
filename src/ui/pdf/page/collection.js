@@ -2,10 +2,10 @@
 import { Page } from '../page';
 
 export class Collection {
-    constructor(props) {
-        this.props.collection = props.collection
+    constructor(collection) {
+        this.collection = collection
 
-        this.pages = this.props.collection.map((p) => <Page page={p}/>)
+        this.pages = this.collection.map((p) => <Page page={p}/>)
     }
 
     map (fn) {

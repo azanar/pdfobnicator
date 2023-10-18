@@ -3,13 +3,12 @@ import { Component } from 'inferno';
 import { interleave0 } from 'interleaver.js';
 
 
-import { Page as PageWell } from 'ui/wells/page.jsx'
-import { DropWell } from 'ui/wells/drop.jsx'
+import { PageWell } from './page.jsx'
+import { DropWell } from './drop.jsx'
 
 export class DocumentWell extends Component {
     constructor(props) {
         super(props)
-        this.props.collection = props.collection
     }
 
     render() {

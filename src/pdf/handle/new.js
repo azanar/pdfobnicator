@@ -5,7 +5,7 @@ export class NewFileHandle {
       return "new.pdf";
     }
   
-    get pageDocs() {
-      return new Promise((resolve) => resolve(new Collection()))
+    get document() {
+      return new Promise((resolve) => resolve(new Document()))
     }
   }

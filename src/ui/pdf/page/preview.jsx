@@ -1,6 +1,6 @@
 import { Component } from "inferno";
 
-import { ConstrainedPageViewer, PageViewer } from "../pdf/viewer";
+import { ConstrainedPageViewer, PageViewer } from "../../../pdf/viewer";
 import { Canvas } from "../canvas";
 
 export class Preview extends Component {

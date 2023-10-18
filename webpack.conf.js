@@ -37,5 +37,9 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin()
-    ]
+    ],
+    devtool: 'source-map',
+    resolve: {
+        extensions: ['.js', '.json', '.jsx', '.wasm'],
+    }
 }
