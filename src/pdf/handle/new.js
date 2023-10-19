@@ -1,4 +1,5 @@
 import { Collection } from "../virtual/collection";
+import { Document } from "../virtual/document";
 
 export class NewFileHandle {
     get path() {
@@ -6,6 +7,6 @@ export class NewFileHandle {
     }
   
     get document() {
-      return new Promise((resolve) => resolve(new Document()))
+      return Document.empty()
     }
   }

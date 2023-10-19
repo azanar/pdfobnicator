@@ -9,6 +9,11 @@ export class Document {
     this.docPromise = docPromise;
   }
 
+  static empty() {
+    const docPromise = PDFDocument.create()
+    return new Document(docPromise)
+
+  }
   static fromReal(copier) {
     const docPromise = PDFDocument.create().then((doc) => {
         copier(doc)
