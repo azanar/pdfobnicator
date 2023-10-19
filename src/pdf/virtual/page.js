@@ -20,4 +20,8 @@ export class Page {
         page.setRotation(pdfLib.degrees(normalizedRot));
       });
   }
+
+  copy(copier) {
+    return this.docPromise.then((doc) => copier(doc)).then((p) => p);
+  }
 }

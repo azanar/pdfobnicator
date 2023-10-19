@@ -1,5 +1,4 @@
 import { Document } from "../document"
-import { Page } from "../page";
 
 import { PDFDocument } from 'pdf-lib'
 

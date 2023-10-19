@@ -20,6 +20,7 @@ describe("PDF.Document", function () {
             const verifiers = res.arr.map((r, idx) => {
               const page = idx + 1
               return r.data
+                .then((data) => { fs.writeFileSync(`out.doc.extract.${idx}.pdf`, data, "binary"); return data; })
                 .then((data) => pdfjsLib.getDocument({ data: data }).promise)
                 .then((doc) => {
                   assert(doc.numPages == 1);

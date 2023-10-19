@@ -1,30 +1,34 @@
-import { Collection } from "./virtual/collection"
-import { Document as VDoc } from "./virtual/document"
+import { makecopier } from "./copier";
+import { Collection } from "./virtual/collection";
+import { Document as VDoc } from "./virtual/document";
 
 export class Document {
-    constructor (docPromise) {
-       this.promise = docPromise 
+  constructor(docPromise) {
+    if (!docPromise) {
+      throw Error("WTF");
     }
+    this.docPromise = docPromise;
+  }
 
-    get data() {
-        return this.docPromise
-        .then((doc) => {
-            if (!doc) throw Error("wtf");
-            return doc.saveAsBase64();
-        })
-        .then((data) => atob(data));
-    }
+  get data() {
+    return this.docPromise
+      .then((doc) => {
+        console.log(doc.constructor);
+        return doc.saveAsBase64();
+      })
+      .then((data) => atob(data));
+  }
 
-
-    extract() {
-        return this.promise.then((doc) =>
-            new Collection(
-                doc.getPageIndices().map((idx) => {
-                    console.log(idx)
-                    const copier = (d) => d.copyPages(doc, [idx]).then((p) => p[0])
-                    return new VDoc(copier)
-                })
-            )
+  extract() {
+    return this.docPromise.then(
+      (doc) =>
+        new Collection(
+          doc.getPageIndices().map((idx) => {
+            console.log(idx);
+            const copier = makecopier(doc, idx, 0)
+            return new VDoc.fromReal(copier);
+          })
         )
-    }
+    );
+  }
 }

@@ -1,3 +1,4 @@
 {
+    "full-trace": true,
     "require": "@babel/register"
 }

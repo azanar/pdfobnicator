@@ -2,7 +2,7 @@ import fs from "fs";
 import assert from "node:assert";
 
 import { PDFDocument as pdflibDoc } from "pdf-lib";
-import { Page } from "../../src/pdf/page.js";
+import { Page } from "../../src/pdf/virtual/page.js";
 
 describe("Virtual.Page", function () {
   context("there is a loaded document", function () {
