@@ -35,7 +35,7 @@ describe("PDF.Virtual.Collection", function () {
             );
             return Promise.all(verifiers);
           })
-          .then(done, done);
+          .then(done, (e) => {console.log(e); done(e)});
       });
     });
   });

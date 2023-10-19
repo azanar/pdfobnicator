@@ -1,4 +1,4 @@
-import { makecopier } from "./copier";
+import { makesrccopier } from "./copier";
 import { Collection } from "./virtual/collection";
 import { Document as VDoc } from "./virtual/document";
 
@@ -13,7 +13,6 @@ export class Document {
   get data() {
     return this.docPromise
       .then((doc) => {
-        console.log(doc.constructor);
         return doc.saveAsBase64();
       })
       .then((data) => atob(data));
@@ -25,7 +24,7 @@ export class Document {
         new Collection(
           doc.getPageIndices().map((idx) => {
             console.log(idx);
-            const copier = makecopier(doc, idx, 0)
+            const copier = makesrccopier(doc, idx, 0)
             return new VDoc.fromReal(copier);
           })
         )

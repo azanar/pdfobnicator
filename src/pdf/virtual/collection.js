@@ -1,6 +1,6 @@
 import { PDFDocument } from "pdf-lib";
 import { Document as RDoc } from "../document";
-import { makecopier } from "../copier";
+import { maketargetcopier } from "../copier";
 
 export class Collection {
   constructor(vdocs) {
@@ -26,7 +26,7 @@ export class Collection {
   collect() {
     const docPromise = PDFDocument.create().then((doc) => {
       const pageCopierPromises = this.arr.map((vdoc, idx) => {
-        const copier = makecopier(doc, 1, idx);
+        const copier = maketargetcopier(doc, 0, idx);
         return vdoc.extract(copier)      
       });
       return Promise.all(pageCopierPromises).then(() => doc)
