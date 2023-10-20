@@ -21,9 +21,10 @@ export class DocumentWells extends Component {
     return (
       <div>
         <h2>Wells!</h2>
-        <div class="collection"/>
-        {this.state.wells}
-        {this.state.emptyWell}
+        <div class="collection">
+          {this.state.wells}
+          {this.state.emptyWell}
+        </div>
       </div>
     );
   }

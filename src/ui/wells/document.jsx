@@ -1,35 +1,22 @@
 import { Component } from "inferno";
 
-import { interleave0 } from "interleaver.js";
-
-import { Collection } from "../pdf/page/collection";
-
-import { PageWell } from "./page.jsx";
-import { DropWell } from "./drop.jsx";
+import { CollectionWell } from "./document/collection";
 
 export class DocumentWell extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      wells: [<LoadingCard />],
+      content: <LoadingCard />,
     };
     props.collectionPromise.then((collection) => {
-      const uiCollection = new Collection(collection);
-      const pages = uiCollection.widgets.map((pageWidget) => <PageWell widget={pageWidget} />);
-      const drops = interleave0(pages, DropWell.generator());
-      const wells = [<DropWell />, ...Array.from(drops)];
       this.setState({
-        wells: wells,
+        content: <CollectionWell collection={collection}/>
       });
     });
   }
 
   render() {
-    return (
-      <div class="collection-item pdf-document">
-        <div class="collection">{this.state.wells}</div>
-      </div>
-    );
+    return this.state.content
   }
 }
 
