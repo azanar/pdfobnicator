@@ -10,17 +10,21 @@ import { Collection } from "../../../src/pdf/virtual/collection";
 describe("PDF.Virtual.Collection", function () {
   context("there is a loaded document", function () {
     const data = fs.readFileSync("test/pdf/fixtures/single-page.pdf");
-    const collection = new Collection([1,2].map(() => {
-      const docPromise = pdflibDoc.load(data);
-      return new Document(docPromise);
-    }))
+    const collection = new Collection(
+      [1, 2].map(() => {
+        const docPromise = pdflibDoc.load(data);
+        return new Document(docPromise);
+      })
+    );
 
     describe(".collect()", function () {
       it("should collect virtual documents into a real document", function (done) {
         collection
           .collect()
-          .data
-          .then((data) => { fs.writeFileSync("out.collect.pdf", data, "binary"); return data; })
+          .data.then((data) => {
+            fs.writeFileSync("out.collect.pdf", data, "binary");
+            return data;
+          })
           .then((data) => pdfjsLib.getDocument({ data: data }).promise)
           .then((doc) => {
             assert.equal(doc.numPages, 2);
@@ -35,7 +39,10 @@ describe("PDF.Virtual.Collection", function () {
             );
             return Promise.all(verifiers);
           })
-          .then(done, (e) => {console.log(e); done(e)});
+          .then(done, (e) => {
+            console.log(e);
+            done(e);
+          });
       });
     });
   });

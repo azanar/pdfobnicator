@@ -37,7 +37,6 @@ export class Canvas extends Component {
 
 
     render() {
-        console.log("redrawing")
         return (<div><canvas ref={this.canvasRef}></canvas></div>)
     }
 }

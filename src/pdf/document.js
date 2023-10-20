@@ -1,3 +1,4 @@
+import { PDFDocument } from "pdf-lib";
 import { makesrccopier } from "./copier";
 import { Collection } from "./virtual/collection";
 import { Document as VDoc } from "./virtual/document";
@@ -8,6 +9,10 @@ export class Document {
       throw Error("WTF");
     }
     this.docPromise = docPromise;
+  }
+
+  static fromArrBuf(arrBuf) {
+    return new Document(PDFDocument.load(arrBuf))
   }
 
   get data() {

@@ -6,7 +6,7 @@ export class Page extends Component {
         super(props)
 
         this.state = {
-            container: <Preview pdf={props.pdf}/>
+            container: <Preview pdf={props.doc} maxDim="150"/>
         }
     }
 

@@ -4,7 +4,12 @@ import { maketargetcopier } from "../copier";
 
 export class Collection {
   constructor(vdocs) {
+    this.name = "new.pdf"
     this.arr = vdocs;
+  }
+
+  get docs() {
+    return this.arr;
   }
 
   add(page, idx) {
@@ -21,6 +26,15 @@ export class Collection {
 
   extend(pages) {
     this.arr = this.arr.concat(pages);
+  }
+
+  *enumerate() {
+      for (const [i, d] of this.arr.entries()) {
+          yield {
+              idx: i,
+              doc: d 
+          }
+      } 
   }
 
   collect() {

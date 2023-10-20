@@ -7,7 +7,7 @@ import { DocumentWell as Document } from './document'
 
 export class EmptyWell extends Component {
     render() {
-        return <div class="well ">
+        return <div class="well collection-item">
             <span onClick={() => this.create()}><i class="fa-solid fa-file-circle-plus fa-2xl"></i></span>        
             <span onClick={() => this.open()}><i class="fa-solid fa-file-import fa-2xl"></i></span>        
         </div >
